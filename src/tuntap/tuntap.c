@@ -13,13 +13,24 @@
 #include "utils.h"
 
 static int tun_fd=-1;
-static char* dev;
+static char *tap_name;
 
-static int set_route(char *dev,char *cidr)
+
+static int set_route(char *dev_t,const char *cidr)
 {
-	return run_cmd("ip route add dev %s %s", dev, cidr);
+	return run_cmd("ip route add dev %s %s", dev_t, cidr);
 }
-static int tun_alloc(char * dev,const char * tap_path)
+
+static int set_address(char *dev_t,const char *cidr)
+{
+    return run_cmd("ip address add dev %s local %s",dev_t,cidr);
+}
+
+static  int set_up(char *dev_t)
+{
+    return run_cmd("ip link set dev %s up",dev_t);
+}
+static int tun_alloc(char * dev_t,const char * tap_path)
 {
     struct ifreq ifr;
     int fd,err;
@@ -32,9 +43,9 @@ static int tun_alloc(char * dev,const char * tap_path)
     }
     memset(&ifr,0,sizeof(struct ifreq));
     ifr.ifr_flags = IFF_TAP | IFF_NO_PI;
-    if(*dev)
+    if(*dev_t)
     {
-    	strncpy(ifr.ifr_name,dev,IFNAMSIZ);
+    	strncpy(ifr.ifr_name,dev_t,IFNAMSIZ);
     }
     //ioctl是设备驱动程序中对设备的I/O通道进行管理的函数
     if((err =ioctl(fd,TUNSETIFF,(void *)&ifr)) <0)
@@ -65,8 +76,32 @@ int tun_write(char *buf,int len)
 	}
 	return write(tun_fd,buf,len);
 }
-void  tun_init(const char * tap_path)
+void  tun_init( char *dev_name,const char * tap_path,const char *tapaddr,const char *taproute)
 {
-       dev = calloc(10,1);
-       tun_fd=tun_alloc(dev,tap_path);
+       tap_name= (char *)malloc(strlen(dev_name)+1);
+        strcpy(tap_name, dev_name);
+       tun_fd=tun_alloc(tap_name,tap_path);
+       if(set_up(tap_name)!=0)
+       {
+           perror("err when set up");
+       }
+       if(set_route(tap_name,taproute)!=0)
+       {
+           perror("err set route");
+       }
+       if(set_address(tap_name,tapaddr))
+       {
+           perror("err set addr");
+       }
+
+
+}
+
+void free_tun()
+{
+    if(tap_name==NULL)
+    {
+        return;
+    }
+    free(tap_name);
 }
