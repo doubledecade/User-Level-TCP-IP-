@@ -1,11 +1,11 @@
 //
-// Created by AT on 2021/12/14.
+// Created by MHP on 2021/12/14.
 //
 
-#ifndef TEST_UTILS_H
-#define TEST_UTILS_H
-
+#ifndef USER_LEVEL_IP_UTILS_H
+#define USER_LEVEL_IP_UTILS_H
+#include <arpa/inet.h>
 #define CMDBUFLEN 100
 int run_cmd(char *cmd, ...);
-
-#endif //TEST_UTILS_H
+uint32_t ip_parse(char *addr);
+#endif //USER_LEVEL_IP_UTILS_H
