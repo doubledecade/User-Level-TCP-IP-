@@ -14,4 +14,4 @@ add_executable(user_level_ip  ./src/tuntap/tuntap.c  ./src/tuntap/tuntap.h
         ./src/utils/utils.c ./src/utils/utils.h
         ./inc/test/tinytest.h src/tuntap/test/test_tuntap.c ./inc/list/list.h ./inc/list/list.c
         ./inc/list/list_iterator.c ./inc/list/list_node.c ./src/netdev/netdev.c
-        ./src/ethernet/ethernet.c ./src/skbuff/skbuff.c)
+        ./src/ethernet/ethernet.c ./src/skbuff/skbuff.c src/main.c)
