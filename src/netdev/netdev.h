@@ -6,7 +6,7 @@
 #define USER_LEVEL_IP_NETDEV_H
 
 #include <stdint.h>
-
+#define BUFLEN 1600
 struct netdev {
 	uint32_t addr; //网卡IP地址
 	uint8_t addr_len; //网卡地址长度
@@ -15,4 +15,5 @@ struct netdev {
 };
 void netdev_init(char *addr, char *hwaddr);
 void free_netdev();
+void * netdev_rx_loop();
 #endif //USER_LEVEL_IP_NETDEV_H
