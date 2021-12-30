@@ -3,3 +3,7 @@
 //
 
 #include "ethernet.h"
+uint8_t *skb_head(struct sk_buff *skb)
+{
+    return skb->head;
+}

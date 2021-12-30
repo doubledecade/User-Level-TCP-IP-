@@ -5,12 +5,14 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tuntap.h>
+#include <linux/if_tun.h>
 #include "netdev.h"
 #include "utils.h"
 #include "ethernet.h"
+#include "skbuff.h"
 struct netdev* loop;//回环地址
 struct netdev* netdev;//网卡地址
-
+extern int running;
 static struct netdev*netdev_alloc( char * addr, char * hwaddr,uint32_t mtu)
 {
 	struct netdev *dev = (struct netdev *)malloc(sizeof (struct netdev));
@@ -61,3 +63,41 @@ int netdev_transmit(struct netdev *netdata,uint8_t *data,uint8_t *dst_hw,uint16_
     ret = tun_write((char *)data, strlen(data));
     return ret;
 }
+static int netdev_receive(struct sk_buff *skb)
+{
+    struct eth_hdr *hdr = eth_hdr(skb);
+    switch (hdr->ethertype) {
+        case ETH_P_ARP:
+            printf("%x\n",hdr->ethertype);
+            break;
+        case ETH_P_IP:
+            break;
+        case ETH_P_IPV6:
+            break;
+        default:
+            printf("Unsupported ethertype %x\n", hdr->ethertype);
+            free_skb(skb);
+            break;
+    }
+    return 0;
+}
+
+//解析模块
+void * netdev_rx_loop()
+{
+    while (running){
+
+        struct sk_buff *skb = alloc_skb(BUFLEN);
+
+        if (tun_read((char *)skb->data, BUFLEN) < 0) {
+            perror("ERR: Read from tun_fd");
+            free_skb(skb);
+            return NULL;
+        }
+        printf("%s\n",skb->data);
+        netdev_receive(skb);
+
+    }
+    return NULL;
+}
+
