@@ -6,6 +6,7 @@
 #define USER_LEVEL_IP_NETDEV_H
 
 #include <stdint.h>
+struct sk_buff;
 #define BUFLEN 1600
 struct netdev {
 	uint32_t addr; //网卡IP地址
@@ -16,4 +17,5 @@ struct netdev {
 void netdev_init(char *addr, char *hwaddr);
 void free_netdev();
 void * netdev_rx_loop();
+int netdev_transmit(struct sk_buff *skb,uint8_t *dst_hw,uint16_t ethertype);
 #endif //USER_LEVEL_IP_NETDEV_H

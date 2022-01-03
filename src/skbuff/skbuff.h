@@ -25,4 +25,6 @@ struct sk_buff {
 };
 struct sk_buff *alloc_skb(unsigned int size);
 void free_skb(struct sk_buff *skb);
+void *skb_reserve(struct sk_buff *skb, unsigned int len);
+uint8_t *skb_push(struct sk_buff *skb, unsigned int len);
 #endif //USER_LEVEL_IP_SKBUFF_H

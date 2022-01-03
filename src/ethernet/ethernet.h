@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <netinet/in.h>
 #include "skbuff.h"
+
+#define ETH_HDR_LEN sizeof(struct eth_hdr)
 struct sk_buff;
 struct netdev;
 

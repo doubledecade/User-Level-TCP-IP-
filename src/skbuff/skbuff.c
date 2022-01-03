@@ -28,3 +28,17 @@ void free_skb(struct sk_buff *skb)
         free(skb);
     }
 }
+void *skb_reserve(struct sk_buff *skb, unsigned int len)
+{
+	skb->data += len;
+
+	return skb->data;
+}
+
+uint8_t *skb_push(struct sk_buff *skb, unsigned int len)
+{
+	skb->data -= len;
+	skb->len += len;
+
+	return skb->data;
+}
