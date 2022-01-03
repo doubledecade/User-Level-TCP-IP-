@@ -9,6 +9,9 @@
 #include "utils.h"
 #include "ethernet.h"
 #include "skbuff.h"
+#include "ip_input.h"
+#include "linux/if_tun.h"
+#include "netdev.h"
 struct netdev* loop;//回环地址
 struct netdev* netdev;//网卡地址
 extern int running;
@@ -48,23 +51,47 @@ void free_netdev()
 }
 
 //发送链路层数据包
-int netdev_transmit(struct netdev *netdata,uint8_t *data,uint8_t *dst_hw,uint16_t ethertype)
+int netdev_transmit(struct sk_buff *skb,uint8_t *dst_hw,uint16_t ethertype)
 {
-    struct eth_hdr *hdr;
-    hdr = (struct eth_hdr *)data;
-    int ret =0;
-    //复制链路层的mac地址数据
-    memcpy(hdr->dmac, dst_hw, netdata->addr_len);
-    memcpy(hdr->smac, netdata->hwaddr, netdata->addr_len);
-    //赋值链路层标志位
-    hdr->ethertype = htons(ethertype);
+	struct netdev *dev;
+	struct eth_hdr *hdr;
+	int ret = 0;
 
-    ret = tun_write((char *)data, strlen(data));
-    return ret;
+	dev = skb->dev;
+
+	skb_push(skb, ETH_HDR_LEN);
+
+	hdr = (struct eth_hdr *)skb->data;
+
+	memcpy(hdr->dmac, dst_hw, dev->addr_len);
+	memcpy(hdr->smac, dev->hwaddr, dev->addr_len);
+
+	hdr->ethertype = htons(ethertype);
+
+
+	ret = tun_write((char *)skb->data, skb->len);
+
+	return ret;
 }
 static int netdev_receive(struct sk_buff *skb)
 {
     struct eth_hdr *hdr = eth_hdr(skb);
+    //解析arp协议
+
+	switch (hdr->ethertype) {
+
+		case ETH_P_ARP:
+			arp_rcv(skb);
+			break;
+		case ETH_P_IP:
+
+			ip_rcv(skb);
+			break;
+		default:
+			printf("未知协议类型");
+			break;
+
+	}
     return 0;
 }
 

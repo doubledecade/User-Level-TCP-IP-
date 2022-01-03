@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include "list.h"
+#include "netdev.h"
 #define RT_LOOPBACK 0x01
 #define RT_GATEWAY  0x02
 #define RT_HOST     0x04
