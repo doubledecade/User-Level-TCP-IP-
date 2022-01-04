@@ -10,6 +10,21 @@
 #define ARP_WAITING     1
 #define ARP_RESOLVED    2
 #include <stdint.h>
+#include "skbuff.h"
+#include "ethernet.h"
+#define ARP_ETHERNET    0x0001
+#define ARP_IPV4        0x0800
+#define ARP_REQUEST     0x0001
+#define ARP_REPLY       0x0002
+
+#define ARP_HDR_LEN sizeof(struct arp_hdr)
+#define ARP_DATA_LEN sizeof(struct arp_ipv4)
+
+#define ARP_CACHE_LEN   32
+#define ARP_FREE        0
+#define ARP_WAITING     1
+#define ARP_RESOLVED    2
+
 struct sk_buff;
 struct arp_cache_entry
 {
@@ -39,4 +54,8 @@ struct arp_ipv4
 
 unsigned char* arp_get_hwaddr(uint32_t sip);
 void arp_rcv(struct sk_buff *skb);
+static inline struct arp_hdr *arp_hdr(struct sk_buff *skb)
+{
+    return (struct arp_hdr *)(skb->head + ETH_HDR_LEN);
+}
 #endif //USER_LEVEL_IP_ARP_H

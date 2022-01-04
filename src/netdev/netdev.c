@@ -12,6 +12,7 @@
 #include "ip_input.h"
 #include "linux/if_tun.h"
 #include "netdev.h"
+#include "arp.h"
 struct netdev* loop;//回环地址
 struct netdev* netdev;//网卡地址
 extern int running;
@@ -77,7 +78,7 @@ static int netdev_receive(struct sk_buff *skb)
 {
     struct eth_hdr *hdr = eth_hdr(skb);
     //解析arp协议
-
+    printf("协议类型 %x\n",hdr->ethertype);
 	switch (hdr->ethertype) {
 
 		case ETH_P_ARP:
@@ -112,5 +113,13 @@ void * netdev_rx_loop()
 
     }
     return NULL;
+}
+struct netdev* netdev_get(uint32_t sip)
+{
+    if (netdev->addr == sip) {
+        return netdev;
+    } else {
+        return NULL;
+    }
 }
 

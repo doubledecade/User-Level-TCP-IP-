@@ -14,6 +14,7 @@ struct netdev {
 	uint8_t hwaddr[6]; //网卡mac地址
 	uint32_t mtu; //mtu大小
 };
+struct netdev* netdev_get(uint32_t sip);
 void netdev_init(char *addr, char *hwaddr);
 void free_netdev();
 void * netdev_rx_loop();
