@@ -69,7 +69,7 @@ int netdev_transmit(struct sk_buff *skb,uint8_t *dst_hw,uint16_t ethertype)
 
 	hdr->ethertype = htons(ethertype);
 
-
+    printf("--->数据%s\n",(char *)skb->data);
 	ret = tun_write((char *)skb->data, skb->len);
 
 	return ret;

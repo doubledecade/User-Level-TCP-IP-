@@ -44,7 +44,7 @@ int ip_rcv(struct sk_buff *skb)
 	ip_init_pkt(ih);
 	switch (ih->proto) {
 		case ICMPV4:
-			icmpv4_reply(skb);
+            icmpv4_incoming(skb);
 			return 0;
 		case IP_TCP:
 			return 0;
