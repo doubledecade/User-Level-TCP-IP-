@@ -39,7 +39,7 @@ drop_pkt:
 	free_skb(skb);
 	return;
 }
-
+//时间戳请求处理
 void icmpv4_timestamp_reply(struct sk_buff *skb)
 {
     struct iphdr *iphdr = ip_hdr(skb);

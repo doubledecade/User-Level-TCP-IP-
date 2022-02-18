@@ -20,5 +20,5 @@ add_executable(user_level_ip  ./src/tuntap/tuntap.c  ./src/tuntap/tuntap.h
         ./inc/test/tinytest.h  ./inc/list_t/list.h ./src/netdev/netdev.c
         ./src/ethernet/ethernet.c ./src/skbuff/skbuff.c src/main.c src/ip/ip_input.c src/ip/ip_input.h src/ip/ip_info.c
         src/ip/ip_info.h src/icmp/icmpv4.c src/icmp/icmpv4.h src/sock/sock.c src/sock/sock.h src/ip/ip_output.c
-        src/ip/ip_output.h src/dst/dst.c src/dst/dst.h src/arp/arp.c src/arp/arp.h)
+        src/ip/ip_output.h src/dst/dst.c src/dst/dst.h src/arp/arp.c src/arp/arp.h src/ip/ip_fragment.c src/ip/ip_fragment.h src/timer/time_wheel_timer.h src/timer/time_wheel_timer.c)
 target_link_libraries(${PROJECT_NAME}   pthread)

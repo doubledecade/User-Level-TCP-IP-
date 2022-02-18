@@ -11,6 +11,7 @@
 #define IPV4 0x04
 #define IP_TCP 0x06
 #define ICMPV4 0x01
+#define IP_OFFSET	0x1FFF		/* "Fragment Offset" part	*/
 
 #define IP_HDR_LEN sizeof(struct iphdr)
 struct iphdr {
