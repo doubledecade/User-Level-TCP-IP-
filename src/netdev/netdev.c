@@ -123,3 +123,21 @@ struct netdev* netdev_get(uint32_t sip)
     }
 }
 
+//解析模块
+void * netdev_rx(int tun_fd)
+{
+
+
+		struct sk_buff *skb = alloc_skb(BUFLEN);
+
+		if (tun_read_fd((char *)skb->data, BUFLEN,tun_fd) < 0) {
+			perror("ERR: Read from tun_fd");
+			free_skb(skb);
+			return NULL;
+		}
+		printf("%s\n",skb->data);
+		netdev_receive(skb);
+
+
+	return NULL;
+}

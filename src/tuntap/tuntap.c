@@ -105,3 +105,34 @@ void free_tun()
     }
     free(tap_name);
 }
+
+int  get_tun_fd( char *dev_name,const char * tap_path,const char *tapaddr,const char *taproute)
+{
+	tap_name= (char *)malloc(strlen(dev_name)+1);
+	strcpy(tap_name, dev_name);
+	tun_fd=tun_alloc(tap_name,tap_path);
+	if(set_up(tap_name)!=0)
+	{
+		perror("err when set up");
+	}
+	if(set_route(tap_name,taproute)!=0)
+	{
+		perror("err set route");
+	}
+	if(set_address(tap_name,tapaddr))
+	{
+		perror("err set addr");
+	}
+
+	return tun_fd;
+}
+
+int tun_read_fd(char *buf,int len,int tun_fd_out)
+{
+	if(tun_fd==-1)
+	{
+		perror("ERR: tun_fd not initialized");
+		return -1;
+	}
+	return read(tun_fd_out,buf,len);
+}
